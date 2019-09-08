@@ -10,26 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_07_193736) do
+ActiveRecord::Schema.define(version: 2019_09_08_223927) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
-  create_table "clubs", force: :cascade do |t|
+  create_table "clubs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "description"
-    t.bigint "member_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.uuid "member_id", null: false
     t.index ["member_id"], name: "index_clubs_on_member_id"
   end
 
   create_table "clubs_members", id: false, force: :cascade do |t|
-    t.bigint "club_id", null: false
-    t.bigint "member_id", null: false
+    t.uuid "club_id", null: false
+    t.uuid "member_id", null: false
   end
 
-  create_table "members", force: :cascade do |t|
+  create_table "members", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.integer "age"
     t.datetime "created_at", precision: 6, null: false
